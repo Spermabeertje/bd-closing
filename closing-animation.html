@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD — From Selling Pumps to Capturing Lifetime Value</title>
+<style>
+  :root {
+    --blue:   #1B2BFF;
+    --blue-d: #0A1ECC;
+    --orange: #EE6B22;
+    --orange-l: #F8B58A;
+    --gray:   #DDDAD7;
+    --gray-d: #C9C5C1;
+    --text:   #1A1A1A;
+    --muted:  #5A554F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--gray);
+    overflow: hidden;
+  }
+  .stage {
+    width: 100vw; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    padding: 4vh 4vw;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 2vw;
+    width: 100%; max-width: 1400px;
+    align-items: center;
+  }
+  /* FROM panel */
+  .from {
+    background: var(--gray-d);
+    padding: 6vh 2vw;
+    text-align: center;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideInLeft 0.9s 0.3s forwards cubic-bezier(.2,.8,.2,1);
+  }
+  .from .label {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(14px, 1.6vw, 22px);
+    color: var(--muted);
+    letter-spacing: 0.4em;
+    margin-bottom: 1.5vh;
+  }
+  .from .head {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(28px, 4.8vw, 68px);
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 2vh;
+  }
+  .from .sub {
+    font-style: italic;
+    color: var(--muted);
+    font-size: clamp(11px, 1.2vw, 16px);
+    margin-bottom: 1.5vh;
+  }
+  .from .stat {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(18px, 2.4vw, 32px);
+    color: var(--muted);
+  }
+  /* Arrow */
+  .arrow {
+    text-align: center;
+    font-size: clamp(40px, 6vw, 84px);
+    color: var(--orange);
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0.3);
+    animation: pop 0.6s 1.1s forwards cubic-bezier(.34,1.56,.64,1);
+  }
+  /* TO panel */
+  .to {
+    background: var(--blue);
+    padding: 7vh 2vw;
+    text-align: center;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(40px) scale(0.95);
+    animation: slideInRight 0.9s 1.4s forwards cubic-bezier(.2,.8,.2,1);
+    position: relative;
+    box-shadow: 0 12px 40px rgba(27,43,255,0.25);
+  }
+  .to .label {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(14px, 1.6vw, 22px);
+    color: var(--orange);
+    letter-spacing: 0.4em;
+    margin-bottom: 1.5vh;
+  }
+  .to .head {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(22px, 3.6vw, 50px);
+    color: white;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin-bottom: 2vh;
+  }
+  .to .sub {
+    font-style: italic;
+    color: var(--orange-l);
+    font-size: clamp(11px, 1.2vw, 16px);
+    margin-bottom: 1.5vh;
+  }
+  .to .stat {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(20px, 2.6vw, 36px);
+    color: white;
+    display: flex; justify-content: center; align-items: baseline; gap: 1ch;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    padding: 0.3em 0.7em;
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(14px, 1.5vw, 20px);
+    letter-spacing: 0.05em;
+    border-radius: 999px;
+    margin-left: 0.6em;
+    opacity: 0;
+    animation: pop 0.5s 3s forwards cubic-bezier(.34,1.56,.64,1);
+  }
+  /* Tagline */
+  .tagline {
+    position: absolute;
+    bottom: 4vh; left: 0; right: 0;
+    text-align: center;
+    font-style: italic; font-weight: 700;
+    color: var(--text);
+    font-size: clamp(12px, 1.3vw, 18px);
+    opacity: 0;
+    animation: fadeUp 0.8s 3.4s forwards;
+  }
+  /* Header insight */
+  .insight {
+    position: absolute;
+    top: 4vh; left: 4vw; right: 4vw;
+    text-align: center;
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(16px, 2vw, 28px);
+    color: var(--text);
+    letter-spacing: 0.02em;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+  }
+  .insight .strike { color: var(--muted); text-decoration: line-through; font-style: italic; }
+  .insight .key   { color: var(--blue); }
+  /* keyframes */
+  @keyframes slideInLeft  { to { opacity: 1; transform: translateX(0); } }
+  @keyframes slideInRight { to { opacity: 1; transform: translateX(0) scale(1); } }
+  @keyframes pop          { to { opacity: 1; transform: scale(1); } }
+  @keyframes fadeUp       { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* Replay button */
+  .replay {
+    position: absolute;
+    top: 1vh; right: 1vh;
+    background: rgba(0,0,0,0.05);
+    border: none;
+    color: var(--muted);
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: 999px;
+    font-size: 12px;
+    font-family: inherit;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+  }
+  .replay:hover { background: var(--orange); color: white; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <button class="replay" onclick="location.reload()">↻ REPLAY</button>
+
+  <div class="insight">
+    BD doesn't have a <span class="strike">product problem</span> — it has a <span class="key">VALUE CAPTURE PROBLEM</span>.
+  </div>
+
+  <div class="row">
+    <div class="from">
+      <div class="label">FROM</div>
+      <div class="head">SELLING<br>PUMPS</div>
+      <div class="sub">transactional · fragmented · margin leaks</div>
+      <div class="stat">€<span id="ltvFrom">2,409</span> LTV / pump</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="to">
+      <div class="label">TO</div>
+      <div class="head">CAPTURING<br>LIFETIME VALUE</div>
+      <div class="sub">contractual · governed · recurring revenue</div>
+      <div class="stat">
+        €<span id="ltvTo">2,409</span> LTV / pump
+        <span class="badge" id="badge">+83%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tagline">Don't just sell pumps — build a profitable healthcare ecosystem.</div>
+</div>
+
+<script>
+  // Animate the LTV counter from 2,409 to 4,408 after the TO panel slides in
+  function animateNumber(el, from, to, duration, delay) {
+    setTimeout(() => {
+      const start = performance.now();
+      function tick(now) {
+        const t = Math.min(1, (now - start) / duration);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - t, 3);
+        const value = Math.round(from + (to - from) * eased);
+        el.textContent = value.toLocaleString('en-US');
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, delay);
+  }
+  animateNumber(document.getElementById('ltvTo'), 2409, 4408, 1500, 2000);
+</script>
+</body>
+</html>
